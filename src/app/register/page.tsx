@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { AxiosError } from "axios";
+import type { ApiError } from "@/types/api.types";
 
 const registerSchema = z
   .object({
@@ -14,7 +16,11 @@ const registerSchema = z
     displayName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
     password: z
       .string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres"),
+      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .regex(/[A-Z]/, "Debe contener al menos una mayúscula")
+      .regex(/[a-z]/, "Debe contener al menos una minúscula")
+      .regex(/[0-9]/, "Debe contener al menos un número")
+      .regex(/[^a-zA-Z0-9]/, "Debe contener al menos un carácter especial"),
     confirmPassword: z.string().min(1, "Confirmá tu contraseña"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -46,8 +52,13 @@ export default function RegisterPage() {
         displayName: data.displayName,
       });
       router.push("/");
-    } catch {
-      setError("No se pudo crear la cuenta. Intentá de nuevo.");
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.data) {
+        const apiError = err.response.data as ApiError;
+        setError(apiError.detail ?? apiError.title ?? "No se pudo crear la cuenta.");
+      } else {
+        setError("No se pudo crear la cuenta. Intentá de nuevo.");
+      }
     }
   }
 
