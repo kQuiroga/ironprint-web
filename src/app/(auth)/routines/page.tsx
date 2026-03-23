@@ -1,8 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { useRoutines, useDeleteRoutine } from '@/hooks/useRoutines';
 
 export default function RoutinesPage() {
@@ -57,16 +55,8 @@ export default function RoutinesPage() {
                 <p className="font-semibold text-zinc-900 hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400">
                   {routine.name}
                 </p>
-                {routine.description && (
-                  <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
-                    {routine.description}
-                  </p>
-                )}
-                <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-600">
-                  Creada el{' '}
-                  {format(new Date(routine.createdAt), "d 'de' MMMM yyyy", {
-                    locale: es,
-                  })}
+                <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-600">
+                  {routine.weeksDuration} semanas · {routine.days.length} días
                 </p>
               </Link>
 

@@ -15,14 +15,15 @@ async function getById(id: string): Promise<RoutineDto> {
   return data;
 }
 
-async function create(body: CreateRoutineRequest): Promise<RoutineDto> {
-  const { data } = await api.post<RoutineDto>('/routines', body);
+// POST /routines devuelve el Guid de la rutina creada (201 Created)
+async function create(body: CreateRoutineRequest): Promise<string> {
+  const { data } = await api.post<string>('/routines', body);
   return data;
 }
 
-async function update(id: string, body: UpdateRoutineRequest): Promise<RoutineDto> {
-  const { data } = await api.put<RoutineDto>(`/routines/${id}`, body);
-  return data;
+// PUT /routines/{id} devuelve 204 No Content
+async function update(id: string, body: UpdateRoutineRequest): Promise<void> {
+  await api.put(`/routines/${id}`, body);
 }
 
 async function remove(id: string): Promise<void> {

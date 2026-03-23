@@ -12,7 +12,6 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  displayName: string;
 }
 
 export interface ApiError {
@@ -48,14 +47,15 @@ export enum Equipment {
   Other = 'Other',
 }
 
+// System.DayOfWeek de .NET: Sunday=0, Monday=1, ..., Saturday=6
 export enum DayOfWeek {
+  Sunday = 0,
   Monday = 1,
   Tuesday = 2,
   Wednesday = 3,
   Thursday = 4,
   Friday = 5,
   Saturday = 6,
-  Sunday = 7,
 }
 
 export interface ExerciseDto {
@@ -84,11 +84,9 @@ export interface UpdateExerciseRequest {
 export interface RoutineExerciseDto {
   id: string;
   exerciseId: string;
-  exerciseName: string;
   order: number;
-  sets: number;
-  reps: number;
-  weight?: number;
+  targetSets: number;
+  targetReps: number;
 }
 
 export interface RoutineDayDto {
@@ -100,47 +98,19 @@ export interface RoutineDayDto {
 export interface RoutineDto {
   id: string;
   name: string;
-  description?: string;
-  days?: RoutineDayDto[];
+  weeksDuration: number;
   createdAt: string;
-}
-
-export interface CreateRoutineExerciseRequest {
-  exerciseId: string;
-  order: number;
-  sets: number;
-  reps: number;
-  weight?: number;
-}
-
-export interface CreateRoutineDayRequest {
-  dayOfWeek: DayOfWeek;
-  exercises: CreateRoutineExerciseRequest[];
+  days: RoutineDayDto[];
 }
 
 export interface CreateRoutineRequest {
   name: string;
-  description?: string;
-  days: CreateRoutineDayRequest[];
-}
-
-export interface UpdateRoutineExerciseRequest {
-  exerciseId: string;
-  order: number;
-  sets: number;
-  reps: number;
-  weight?: number;
-}
-
-export interface UpdateRoutineDayRequest {
-  dayOfWeek: DayOfWeek;
-  exercises: UpdateRoutineExerciseRequest[];
+  weeksDuration: number;
 }
 
 export interface UpdateRoutineRequest {
   name: string;
-  description?: string;
-  days: CreateRoutineDayRequest[];
+  weeksDuration: number;
 }
 
 export interface CalendarDayDto {
