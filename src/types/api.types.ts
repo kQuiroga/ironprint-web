@@ -28,22 +28,14 @@ export enum MuscleGroup {
   Shoulders = 'Shoulders',
   Biceps = 'Biceps',
   Triceps = 'Triceps',
-  Legs = 'Legs',
-  Core = 'Core',
+  Forearms = 'Forearms',
+  Abs = 'Abs',
+  Quads = 'Quads',
+  Hamstrings = 'Hamstrings',
   Glutes = 'Glutes',
-  Cardio = 'Cardio',
+  Calves = 'Calves',
   FullBody = 'FullBody',
-  Other = 'Other',
-}
-
-export enum Equipment {
-  Barbell = 'Barbell',
-  Dumbbell = 'Dumbbell',
-  Machine = 'Machine',
-  Cable = 'Cable',
-  Bodyweight = 'Bodyweight',
-  Band = 'Band',
-  Kettlebell = 'Kettlebell',
+  Cardio = 'Cardio',
   Other = 'Other',
 }
 
@@ -62,7 +54,6 @@ export interface ExerciseDto {
   id: string;
   name: string;
   muscleGroup: MuscleGroup;
-  equipment?: Equipment;
   notes?: string;
   createdAt: string;
 }
@@ -70,14 +61,12 @@ export interface ExerciseDto {
 export interface CreateExerciseRequest {
   name: string;
   muscleGroup: MuscleGroup;
-  equipment?: Equipment;
   notes?: string;
 }
 
 export interface UpdateExerciseRequest {
   name: string;
   muscleGroup: MuscleGroup;
-  equipment?: Equipment;
   notes?: string;
 }
 
