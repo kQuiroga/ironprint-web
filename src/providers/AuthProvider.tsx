@@ -32,8 +32,8 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 function decodeUserFromJwt(token: string): User {
   const payload = JSON.parse(atob(token.split('.')[1]));
   return {
-    email: payload.email,
-    displayName: payload.display_name,
+    email: payload.email ?? '',
+    displayName: payload.name ?? '',
   };
 }
 
