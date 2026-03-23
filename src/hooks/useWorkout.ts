@@ -27,10 +27,11 @@ export function useCreateWorkoutSession() {
   });
 }
 
-export function useLogSet(sessionId: string) {
+export function useLogSet() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (body: CreateSetLogRequest) => workoutService.logSet(sessionId, body),
+    mutationFn: ({ sessionId, body }: { sessionId: string; body: CreateSetLogRequest }) =>
+      workoutService.logSet(sessionId, body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['workout-session'] }),
   });
 }
