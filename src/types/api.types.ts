@@ -39,15 +39,15 @@ export enum MuscleGroup {
   Other = 'Other',
 }
 
-// System.DayOfWeek de .NET: Sunday=0, Monday=1, ..., Saturday=6
+// System.DayOfWeek de .NET serializado como string con JsonStringEnumConverter
 export enum DayOfWeek {
-  Sunday = 0,
-  Monday = 1,
-  Tuesday = 2,
-  Wednesday = 3,
-  Thursday = 4,
-  Friday = 5,
-  Saturday = 6,
+  Sunday = 'Sunday',
+  Monday = 'Monday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday',
+  Thursday = 'Thursday',
+  Friday = 'Friday',
+  Saturday = 'Saturday',
 }
 
 export interface ExerciseDto {
@@ -92,9 +92,22 @@ export interface RoutineDto {
   days: RoutineDayDto[];
 }
 
+export interface CreateRoutineExerciseRequest {
+  exerciseId: string;
+  order: number;
+  targetSets: number;
+  targetReps: number;
+}
+
+export interface CreateRoutineDayRequest {
+  dayOfWeek: DayOfWeek;
+  exercises: CreateRoutineExerciseRequest[];
+}
+
 export interface CreateRoutineRequest {
   name: string;
   weeksDuration: number;
+  days?: CreateRoutineDayRequest[];
 }
 
 export interface UpdateRoutineRequest {
@@ -110,27 +123,23 @@ export interface CalendarDayDto {
 export interface SetLogDto {
   id: string;
   setNumber: number;
+  weightValue: number;
   reps: number;
-  weight: number;
-  completedAt: string;
+  completed: boolean;
 }
 
 export interface ExerciseLogDto {
   id: string;
   exerciseId: string;
-  exerciseName: string;
+  order: number;
   sets: SetLogDto[];
 }
 
 export interface WorkoutSessionDto {
   id: string;
   date: string;
-  routineDayId: string;
-  routineName: string;
-  dayOfWeek: DayOfWeek;
+  routineDayId: string | null;
   exercises: ExerciseLogDto[];
-  startedAt: string;
-  completedAt?: string;
 }
 
 export interface CreateWorkoutSessionRequest {

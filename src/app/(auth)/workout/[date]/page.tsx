@@ -10,7 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useWorkoutSession, useCreateWorkoutSession, useLogSet } from '@/hooks/useWorkout';
 import { useRoutines } from '@/hooks/useRoutines';
+import { useExercises } from '@/hooks/useExercises';
 import { cn } from '@/lib/cn';
+import { DayOfWeek } from '@/types/api.types';
 import type { ExerciseLogDto, RoutineDayDto } from '@/types/api.types';
 
 interface Props {
@@ -104,16 +106,18 @@ function AddSetForm({
 
 function ExerciseCard({
   exercise,
+  exerciseName,
   sessionId,
 }: {
   exercise: ExerciseLogDto;
+  exerciseName: string;
   sessionId: string;
 }) {
   return (
     <div className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
       <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
         <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
-          {exercise.exerciseName}
+          {exerciseName}
         </h3>
       </div>
 
@@ -131,7 +135,7 @@ function ExerciseCard({
                   Serie {set.setNumber}
                 </span>
                 <span>{set.reps} reps</span>
-                <span>{set.weight} kg</span>
+                <span>{set.weightValue} kg</span>
               </div>
             ))}
           </div>
@@ -164,10 +168,20 @@ function StartSession({ date }: { date: string }) {
     createSession.mutate({ routineDayId: values.routineDayId, date });
   }
 
-  const DAY_LABELS: Record<number, string> = {
-    1: 'Lunes', 2: 'Martes', 3: 'Miércoles', 4: 'Jueves',
-    5: 'Viernes', 6: 'Sábado', 7: 'Domingo',
+  const DAY_LABELS: Record<DayOfWeek, string> = {
+    [DayOfWeek.Monday]: 'Lunes',
+    [DayOfWeek.Tuesday]: 'Martes',
+    [DayOfWeek.Wednesday]: 'Miércoles',
+    [DayOfWeek.Thursday]: 'Jueves',
+    [DayOfWeek.Friday]: 'Viernes',
+    [DayOfWeek.Saturday]: 'Sábado',
+    [DayOfWeek.Sunday]: 'Domingo',
   };
+
+  const DAY_ORDER: DayOfWeek[] = [
+    DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday,
+    DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday,
+  ];
 
   return (
     <div>
@@ -226,7 +240,7 @@ function StartSession({ date }: { date: string }) {
               >
                 <option value="">Seleccioná un día</option>
                 {[...(selectedRoutine.days as RoutineDayDto[])]
-                  .sort((a, b) => a.dayOfWeek - b.dayOfWeek)
+                  .sort((a, b) => DAY_ORDER.indexOf(a.dayOfWeek) - DAY_ORDER.indexOf(b.dayOfWeek))
                   .map((day) => (
                     <option key={day.id} value={day.id}>
                       {DAY_LABELS[day.dayOfWeek]}
@@ -246,7 +260,7 @@ function StartSession({ date }: { date: string }) {
             disabled={createSession.isPending || !selectedRoutineId}
             className="w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
           >
-            Iniciar sesión
+            {createSession.isPending ? 'Iniciando...' : 'Comenzar entrenamiento'}
           </button>
         </form>
       </div>
@@ -273,6 +287,8 @@ function WorkoutSkeleton() {
 export default function WorkoutSessionPage({ params }: Props) {
   const { date } = use(params);
   const { data: session, isLoading, isError, error } = useWorkoutSession(date);
+  const { data: exercises } = useExercises();
+  const exerciseMap = new Map((exercises ?? []).map((e) => [e.id, e.name]));
 
   const isNotFound =
     isError && isAxiosError(error) && error.response?.status === 404;
@@ -298,12 +314,16 @@ export default function WorkoutSessionPage({ params }: Props) {
         <h1 className="text-2xl font-bold capitalize text-zinc-900 dark:text-zinc-100">
           {format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}
         </h1>
-        <p className="mt-1 text-zinc-500 dark:text-zinc-400">{session.routineName}</p>
       </div>
 
       <div className="space-y-4">
         {session.exercises.map((exercise) => (
-          <ExerciseCard key={exercise.id} exercise={exercise} sessionId={session.id} />
+          <ExerciseCard
+            key={exercise.id}
+            exercise={exercise}
+            exerciseName={exerciseMap.get(exercise.exerciseId) ?? exercise.exerciseId}
+            sessionId={session.id}
+          />
         ))}
       </div>
     </div>

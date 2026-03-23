@@ -4,16 +4,22 @@ import { use } from 'react';
 import Link from 'next/link';
 import { useRoutine } from '@/hooks/useRoutines';
 import { useExercises } from '@/hooks/useExercises';
+import { DayOfWeek } from '@/types/api.types';
 
-const DAY_LABELS: Record<number, string> = {
-  0: 'Domingo',
-  1: 'Lunes',
-  2: 'Martes',
-  3: 'Miércoles',
-  4: 'Jueves',
-  5: 'Viernes',
-  6: 'Sábado',
+const DAY_LABELS: Record<DayOfWeek, string> = {
+  [DayOfWeek.Monday]: 'Lunes',
+  [DayOfWeek.Tuesday]: 'Martes',
+  [DayOfWeek.Wednesday]: 'Miércoles',
+  [DayOfWeek.Thursday]: 'Jueves',
+  [DayOfWeek.Friday]: 'Viernes',
+  [DayOfWeek.Saturday]: 'Sábado',
+  [DayOfWeek.Sunday]: 'Domingo',
 };
+
+const DAY_ORDER: DayOfWeek[] = [
+  DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday,
+  DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday,
+];
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -48,7 +54,9 @@ export default function RoutineDetailPage({ params }: Props) {
     );
   }
 
-  const sortedDays = [...routine.days].sort((a, b) => a.dayOfWeek - b.dayOfWeek);
+  const sortedDays = [...routine.days].sort(
+    (a, b) => DAY_ORDER.indexOf(a.dayOfWeek) - DAY_ORDER.indexOf(b.dayOfWeek),
+  );
 
   return (
     <div>
