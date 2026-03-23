@@ -64,9 +64,17 @@ export default function RoutineDetailPage({ params }: Props) {
         >
           ← Rutinas
         </Link>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-          {routine.name}
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            {routine.name}
+          </h1>
+          <Link
+            href={`/routines/${id}/edit`}
+            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+          >
+            Editar
+          </Link>
+        </div>
         {routine.description && (
           <p className="mt-1 text-zinc-500 dark:text-zinc-400">
             {routine.description}

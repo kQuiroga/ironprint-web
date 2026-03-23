@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 const navLinks = [
   { href: "/calendar", label: "Calendario" },
   { href: "/routines", label: "Rutinas" },
+  { href: "/exercises", label: "Ejercicios" },
   { href: "/stats", label: "Estadísticas" },
 ];
 
