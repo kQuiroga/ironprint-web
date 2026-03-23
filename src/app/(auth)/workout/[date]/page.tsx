@@ -27,8 +27,8 @@ type StartForm = z.infer<typeof startSchema>;
 // ─── Esquema para registrar una serie ────────────────────────────────────────
 
 const logSetSchema = z.object({
-  reps: z.coerce.number().int().positive('Ingresá las reps'),
-  weight: z.coerce.number().nonnegative('Ingresá el peso'),
+  reps: z.number().int().positive('Ingresá las reps'),
+  weight: z.number().nonnegative('Ingresá el peso'),
 });
 type LogSetForm = z.infer<typeof logSetSchema>;
 
@@ -70,7 +70,7 @@ function AddSetForm({
         <label className="mb-1 block text-xs text-zinc-500">Reps</label>
         <input
           type="number"
-          {...register('reps')}
+          {...register('reps', { valueAsNumber: true })}
           className={cn(
             'w-full rounded-lg border px-3 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100',
             errors.reps ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
@@ -82,7 +82,7 @@ function AddSetForm({
         <input
           type="number"
           step="0.5"
-          {...register('weight')}
+          {...register('weight', { valueAsNumber: true })}
           className={cn(
             'w-full rounded-lg border px-3 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100',
             errors.weight ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
