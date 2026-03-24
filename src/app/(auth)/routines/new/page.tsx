@@ -1,13 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useForm, useFieldArray, Control, UseFormRegister, FieldErrors } from 'react-hook-form';
+import { useForm, useFieldArray, useController, useWatch, Control, UseFormRegister, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateRoutine } from '@/hooks/useRoutines';
 import { useExercises } from '@/hooks/useExercises';
-import { DayOfWeek } from '@/types/api.types';
+import { DayOfWeek, MuscleGroup } from '@/types/api.types';
 import type { ExerciseDto } from '@/types/api.types';
 import { cn } from '@/lib/cn';
 
@@ -21,6 +22,8 @@ const exerciseEntrySchema = z.object({
 
 const dayEntrySchema = z.object({
   dayOfWeek: z.nativeEnum(DayOfWeek),
+  name: z.string().max(100).optional(),
+  muscleGroups: z.array(z.nativeEnum(MuscleGroup)),
   exercises: z.array(exerciseEntrySchema).min(1, 'Agregá al menos un ejercicio'),
 });
 
@@ -49,6 +52,25 @@ const DAY_ORDER: DayOfWeek[] = [
   DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday,
 ];
 
+const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
+  [MuscleGroup.Chest]: 'Pecho',
+  [MuscleGroup.Back]: 'Espalda',
+  [MuscleGroup.Shoulders]: 'Hombros',
+  [MuscleGroup.Biceps]: 'Bíceps',
+  [MuscleGroup.Triceps]: 'Tríceps',
+  [MuscleGroup.Forearms]: 'Antebrazos',
+  [MuscleGroup.Abs]: 'Abdominales',
+  [MuscleGroup.Quads]: 'Cuádriceps',
+  [MuscleGroup.Hamstrings]: 'Isquiotibiales',
+  [MuscleGroup.Glutes]: 'Glúteos',
+  [MuscleGroup.Calves]: 'Gemelos',
+  [MuscleGroup.FullBody]: 'Cuerpo completo',
+  [MuscleGroup.Cardio]: 'Cardio',
+  [MuscleGroup.Other]: 'Otro',
+};
+
+const ALL_MUSCLE_GROUPS = Object.values(MuscleGroup);
+
 // ── ExerciseRow ───────────────────────────────────────────────────────────────
 
 interface ExerciseRowProps {
@@ -57,11 +79,11 @@ interface ExerciseRowProps {
   dayIndex: number;
   exIndex: number;
   onRemove: () => void;
-  catalogExercises: ExerciseDto[];
+  availableExercises: ExerciseDto[];
   showLabels: boolean;
 }
 
-function ExerciseRow({ register, errors, dayIndex, exIndex, onRemove, catalogExercises, showLabels }: ExerciseRowProps) {
+function ExerciseRow({ register, errors, dayIndex, exIndex, onRemove, availableExercises, showLabels }: ExerciseRowProps) {
   const exErrors = errors.days?.[dayIndex]?.exercises?.[exIndex];
   return (
     <div className="flex items-end gap-2">
@@ -77,7 +99,7 @@ function ExerciseRow({ register, errors, dayIndex, exIndex, onRemove, catalogExe
           )}
         >
           <option value="">Seleccioná...</option>
-          {catalogExercises.map((ex) => (
+          {availableExercises.map((ex) => (
             <option key={ex.id} value={ex.id}>{ex.name}</option>
           ))}
         </select>
@@ -134,15 +156,36 @@ interface DayPanelProps {
 }
 
 function DayPanel({ control, register, errors, index, onRemove, usedDays, catalogExercises }: DayPanelProps) {
-  const { fields, append, remove } = useFieldArray({
+  const [showAll, setShowAll] = useState(false);
+
+  const { fields, append, remove } = useFieldArray({ control, name: `days.${index}.exercises` });
+
+  const { field: muscleGroupsField } = useController({
     control,
-    name: `days.${index}.exercises`,
+    name: `days.${index}.muscleGroups`,
   });
+
+  const selectedMuscleGroups = useWatch({ control, name: `days.${index}.muscleGroups` }) ?? [];
+
+  const availableExercises =
+    showAll || selectedMuscleGroups.length === 0
+      ? catalogExercises
+      : catalogExercises.filter((ex) => selectedMuscleGroups.includes(ex.muscleGroup));
+
+  function toggleMuscleGroup(group: MuscleGroup) {
+    const current = muscleGroupsField.value ?? [];
+    muscleGroupsField.onChange(
+      current.includes(group)
+        ? current.filter((g) => g !== group)
+        : [...current, group],
+    );
+  }
 
   const dayErrors = errors.days?.[index];
 
   return (
     <div className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+      {/* Header: día de semana + eliminar */}
       <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
         <select
           {...register(`days.${index}.dayOfWeek`)}
@@ -154,16 +197,63 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
             </option>
           ))}
         </select>
-        <button
-          type="button"
-          onClick={onRemove}
-          className="text-sm text-zinc-400 hover:text-red-500"
-        >
+        <button type="button" onClick={onRemove} className="text-sm text-zinc-400 hover:text-red-500">
           Eliminar día
         </button>
       </div>
 
+      {/* Nombre del día */}
+      <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
+        <input
+          {...register(`days.${index}.name`)}
+          placeholder="Nombre del día (ej: Push, Pierna, Full Body)"
+          className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+        />
+      </div>
+
+      {/* Grupos musculares */}
+      <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
+        <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+          Grupos musculares (filtra los ejercicios disponibles)
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {ALL_MUSCLE_GROUPS.map((group) => (
+            <button
+              key={group}
+              type="button"
+              onClick={() => toggleMuscleGroup(group)}
+              className={cn(
+                'rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
+                selectedMuscleGroups.includes(group)
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700',
+              )}
+            >
+              {MUSCLE_GROUP_LABELS[group]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Ejercicios */}
       <div className="space-y-2 px-5 py-3">
+        {selectedMuscleGroups.length > 0 && (
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-zinc-400">
+              {showAll
+                ? 'Mostrando todos los ejercicios'
+                : `${availableExercises.length} ejercicio${availableExercises.length !== 1 ? 's' : ''} para los grupos seleccionados`}
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowAll((v) => !v)}
+              className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-400"
+            >
+              {showAll ? 'Volver al filtro' : 'Ver todos'}
+            </button>
+          </div>
+        )}
+
         {fields.length === 0 && (
           <p className="text-xs text-zinc-400">Sin ejercicios todavía.</p>
         )}
@@ -175,7 +265,7 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
             dayIndex={index}
             exIndex={exIndex}
             onRemove={() => remove(exIndex)}
-            catalogExercises={catalogExercises}
+            availableExercises={availableExercises}
             showLabels={exIndex === 0}
           />
         ))}
@@ -225,6 +315,8 @@ export default function NewRoutinePage() {
         weeksDuration: values.weeksDuration,
         days: values.days.map((day) => ({
           dayOfWeek: day.dayOfWeek,
+          name: day.name || undefined,
+          muscleGroups: day.muscleGroups,
           exercises: day.exercises.map((ex, j) => ({
             exerciseId: ex.exerciseId,
             order: j + 1,
@@ -285,7 +377,7 @@ export default function NewRoutinePage() {
             <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">Días</h2>
             <button
               type="button"
-              onClick={() => appendDay({ dayOfWeek: getNextAvailableDay(), exercises: [] })}
+              onClick={() => appendDay({ dayOfWeek: getNextAvailableDay(), name: '', muscleGroups: [], exercises: [] })}
               disabled={dayFields.length >= 7}
               className="rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >

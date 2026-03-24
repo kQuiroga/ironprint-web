@@ -4,7 +4,7 @@ import { use } from 'react';
 import Link from 'next/link';
 import { useRoutine } from '@/hooks/useRoutines';
 import { useExercises } from '@/hooks/useExercises';
-import { DayOfWeek } from '@/types/api.types';
+import { DayOfWeek, MuscleGroup } from '@/types/api.types';
 
 const DAY_LABELS: Record<DayOfWeek, string> = {
   [DayOfWeek.Monday]: 'Lunes',
@@ -14,6 +14,23 @@ const DAY_LABELS: Record<DayOfWeek, string> = {
   [DayOfWeek.Friday]: 'Viernes',
   [DayOfWeek.Saturday]: 'Sábado',
   [DayOfWeek.Sunday]: 'Domingo',
+};
+
+const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
+  [MuscleGroup.Chest]: 'Pecho',
+  [MuscleGroup.Back]: 'Espalda',
+  [MuscleGroup.Shoulders]: 'Hombros',
+  [MuscleGroup.Biceps]: 'Bíceps',
+  [MuscleGroup.Triceps]: 'Tríceps',
+  [MuscleGroup.Forearms]: 'Antebrazos',
+  [MuscleGroup.Abs]: 'Abdominales',
+  [MuscleGroup.Quads]: 'Cuádriceps',
+  [MuscleGroup.Hamstrings]: 'Isquiotibiales',
+  [MuscleGroup.Glutes]: 'Glúteos',
+  [MuscleGroup.Calves]: 'Gemelos',
+  [MuscleGroup.FullBody]: 'Cuerpo completo',
+  [MuscleGroup.Cardio]: 'Cardio',
+  [MuscleGroup.Other]: 'Otro',
 };
 
 const DAY_ORDER: DayOfWeek[] = [
@@ -93,7 +110,22 @@ export default function RoutineDetailPage({ params }: Props) {
               <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
                 <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                   {DAY_LABELS[day.dayOfWeek] ?? `Día ${day.dayOfWeek}`}
+                  {day.name && (
+                    <span className="ml-2 font-normal text-zinc-500 dark:text-zinc-400">— {day.name}</span>
+                  )}
                 </h2>
+                {day.muscleGroups.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {day.muscleGroups.map((mg) => (
+                      <span
+                        key={mg}
+                        className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                      >
+                        {MUSCLE_GROUP_LABELS[mg]}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {day.exercises.length === 0 ? (

@@ -81,6 +81,8 @@ export interface RoutineExerciseDto {
 export interface RoutineDayDto {
   id: string;
   dayOfWeek: DayOfWeek;
+  name: string | null;
+  muscleGroups: MuscleGroup[];
   exercises: RoutineExerciseDto[];
 }
 
@@ -88,6 +90,7 @@ export interface RoutineDto {
   id: string;
   name: string;
   weeksDuration: number;
+  isActive: boolean;
   createdAt: string;
   days: RoutineDayDto[];
 }
@@ -101,6 +104,8 @@ export interface CreateRoutineExerciseRequest {
 
 export interface CreateRoutineDayRequest {
   dayOfWeek: DayOfWeek;
+  name?: string;
+  muscleGroups: MuscleGroup[];
   exercises: CreateRoutineExerciseRequest[];
 }
 
@@ -115,9 +120,21 @@ export interface UpdateRoutineRequest {
   weeksDuration: number;
 }
 
+export enum DayLogStatus {
+  Completed = 'Completed',
+  NotCompleted = 'NotCompleted',
+}
+
+export interface UpsertDayLogRequest {
+  status: DayLogStatus;
+}
+
 export interface CalendarDayDto {
   date: string;
   hasSession: boolean;
+  sessionId: string | null;
+  dayLogStatus: DayLogStatus | null;
+  isPlanned: boolean;
 }
 
 export interface SetLogDto {
