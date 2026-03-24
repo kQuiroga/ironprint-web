@@ -26,8 +26,21 @@ async function update(id: string, body: UpdateRoutineRequest): Promise<void> {
   await api.put(`/routines/${id}`, body);
 }
 
+async function activate(id: string): Promise<void> {
+  await api.post(`/routines/${id}/activate`);
+}
+
+async function deactivate(id: string): Promise<void> {
+  await api.post(`/routines/${id}/deactivate`);
+}
+
+async function getActive(): Promise<RoutineDto | null> {
+  const res = await api.get<RoutineDto>('/routines/active', { validateStatus: (s) => s === 200 || s === 204 });
+  return res.status === 204 ? null : res.data;
+}
+
 async function remove(id: string): Promise<void> {
   await api.delete(`/routines/${id}`);
 }
 
-export const routineService = { getAll, getById, create, update, remove };
+export const routineService = { getAll, getById, getActive, create, update, activate, deactivate, remove };

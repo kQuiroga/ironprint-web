@@ -35,6 +35,35 @@ export function useUpdateRoutine() {
   });
 }
 
+export function useActiveRoutine() {
+  return useQuery({
+    queryKey: ['routines', 'active'],
+    queryFn: routineService.getActive,
+  });
+}
+
+export function useActivateRoutine() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => routineService.activate(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['routines'] });
+      queryClient.invalidateQueries({ queryKey: ['workout-calendar'] });
+    },
+  });
+}
+
+export function useDeactivateRoutine() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => routineService.deactivate(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['routines'] });
+      queryClient.invalidateQueries({ queryKey: ['workout-calendar'] });
+    },
+  });
+}
+
 export function useDeleteRoutine() {
   const queryClient = useQueryClient();
   return useMutation({
