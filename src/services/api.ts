@@ -30,11 +30,8 @@ let failedQueue: Array<{
 
 function processQueue(error: unknown, token: string | null): void {
   failedQueue.forEach(({ resolve, reject }) => {
-    if (token) {
-      resolve(token);
-    } else {
-      reject(error);
-    }
+    if (token) resolve(token);
+    else reject(error);
   });
   failedQueue = [];
 }
@@ -61,35 +58,19 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const cookieResponse = await fetch('/api/auth/refresh-token');
-      if (!cookieResponse.ok) {
-        throw new Error('No refresh token available');
-      }
-      const { refreshToken } = await cookieResponse.json();
+      const response = await fetch('/api/auth/refresh-token', { method: 'POST' });
+      if (!response.ok) throw new Error('Refresh failed');
 
-      const { data } = await axios.post(
-        `${api.defaults.baseURL}/auth/refresh`,
-        { refreshToken },
-      );
-
-      setAccessToken(data.accessToken);
-
-      await fetch('/api/auth/set-refresh-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: data.refreshToken }),
-      });
-
-      processQueue(null, data.accessToken);
-      originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+      const { accessToken: newToken } = await response.json();
+      setAccessToken(newToken);
+      processQueue(null, newToken);
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);
       setAccessToken(null);
-      await fetch('/api/auth/clear-refresh-token', { method: 'POST' });
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
+      try { sessionStorage.removeItem('ironprint_user'); } catch { /* ignore */ }
+      if (typeof window !== 'undefined') window.location.href = '/login';
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

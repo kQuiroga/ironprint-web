@@ -27,6 +27,7 @@ interface AuthContextValue {
   logout: () => Promise<void>;
 }
 
+const SESSION_KEY = 'ironprint_user';
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function decodeUserFromJwt(token: string): User {
@@ -37,40 +38,46 @@ function decodeUserFromJwt(token: string): User {
   };
 }
 
+function saveUser(user: User): void {
+  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(user)); } catch { /* ignore */ }
+}
+
+function clearUser(): void {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch { /* ignore */ }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    async function rehydrate() {
-      try {
-        const tokens = await authService.refresh();
-        setUser(decodeUserFromJwt(tokens.accessToken));
-      } catch {
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    rehydrate();
+    try {
+      const stored = sessionStorage.getItem(SESSION_KEY);
+      if (stored) setUser(JSON.parse(stored) as User);
+    } catch { /* ignore */ }
+    setIsLoading(false);
   }, []);
 
   const login = useCallback(async (data: LoginRequest) => {
     const tokens = await authService.login(data);
-    setUser(decodeUserFromJwt(tokens.accessToken));
+    const newUser = decodeUserFromJwt(tokens.accessToken);
+    setUser(newUser);
+    saveUser(newUser);
   }, []);
 
   const register = useCallback(async (data: RegisterRequest) => {
     const tokens = await authService.register(data);
-    setUser(decodeUserFromJwt(tokens.accessToken));
+    const newUser = decodeUserFromJwt(tokens.accessToken);
+    setUser(newUser);
+    saveUser(newUser);
   }, []);
 
   const logout = useCallback(async () => {
     await authService.logout();
     setAccessToken(null);
     setUser(null);
+    clearUser();
     router.push('/login');
   }, [router]);
 
