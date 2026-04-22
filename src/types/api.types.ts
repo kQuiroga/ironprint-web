@@ -135,6 +135,7 @@ export interface CalendarDayDto {
   sessionId: string | null;
   dayLogStatus: DayLogStatus | null;
   isPlanned: boolean;
+  routineDayId: string | null;
 }
 
 export interface SetLogDto {
