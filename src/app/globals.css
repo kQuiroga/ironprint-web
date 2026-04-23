@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ── Stitch "Mindful Rhythm" Design Tokens ──────────────────────────────── */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Primary — lavender */
+  --color-primary: #725991;
+  --color-primary-dim: #664d84;
+  --color-primary-container: #dbbdfd;
+  --color-primary-fixed: #dbbdfd;
+  --color-primary-fixed-dim: #cdafee;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #4f376c;
+  --color-on-primary-fixed: #3a2257;
+  --color-on-primary-fixed-variant: #584076;
+
+  /* Secondary — peach */
+  --color-secondary: #8e5647;
+  --color-secondary-dim: #804a3c;
+  --color-secondary-container: #ffdbd1;
+  --color-secondary-fixed: #ffdbd1;
+  --color-secondary-fixed-dim: #ffc8ba;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #784436;
+  --color-on-secondary-fixed: #623225;
+  --color-on-secondary-fixed-variant: #834d3f;
+
+  /* Tertiary — teal */
+  --color-tertiary: #3b6d61;
+  --color-tertiary-dim: #2f6155;
+  --color-tertiary-container: #b3e8d8;
+  --color-tertiary-fixed: #b3e8d8;
+  --color-tertiary-fixed-dim: #a5d9ca;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #24574b;
+  --color-on-tertiary-fixed: #0c4439;
+  --color-on-tertiary-fixed-variant: #2e6155;
+
+  /* Surface hierarchy */
+  --color-surface: #fffbff;
+  --color-surface-bright: #fffbff;
+  --color-surface-dim: #e6e3d3;
+  --color-surface-variant: #ece8db;
+  --color-surface-tint: #725991;
+  --color-surface-container: #f7f3ea;
+  --color-surface-container-low: #fdf9f1;
+  --color-surface-container-high: #f1eee2;
+  --color-surface-container-highest: #ece8db;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #39382f;
+  --color-on-surface-variant: #66655a;
+
+  /* Background */
+  --color-background: #fffbff;
+  --color-on-background: #39382f;
+
+  /* Error */
+  --color-error: #b3374e;
+  --color-error-dim: #770326;
+  --color-error-container: #f76a80;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #68001f;
+
+  /* Outline */
+  --color-outline: #838175;
+  --color-outline-variant: #bcb9ad;
+
+  /* Inverse */
+  --color-inverse-surface: #0f0e0b;
+  --color-inverse-on-surface: #9f9d97;
+  --color-inverse-primary: #dbbdfd;
+
+  /* Fonts */
+  --font-headline: var(--font-manrope);
+  --font-body: var(--font-inter);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Signature gradient ─────────────────────────────────────────────────── */
+
+.signature-gradient {
+  background: linear-gradient(135deg, #725991 0%, #dbbdfd 100%);
 }
+
+/* ── Base styles ────────────────────────────────────────────────────────── */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-manrope), system-ui, sans-serif;
 }

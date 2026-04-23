@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 import type { ApiError } from "@/types/api.types";
+import { cn } from "@/lib/cn";
 
 const registerSchema = z
   .object({
@@ -45,10 +46,7 @@ export default function RegisterPage() {
   async function onSubmit(data: RegisterForm) {
     setError(null);
     try {
-      await registerUser({
-        email: data.email,
-        password: data.password,
-      });
+      await registerUser({ email: data.email, password: data.password });
       router.push("/");
     } catch (err) {
       if (err instanceof AxiosError && err.response?.data) {
@@ -61,26 +59,43 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950">
-      <div className="w-full max-w-sm space-y-6 rounded-xl bg-white p-8 shadow-md dark:bg-zinc-900">
-        <h1 className="text-center text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-          IronPrint
-        </h1>
-        <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
-          Creá tu cuenta
-        </p>
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-6 overflow-hidden bg-background">
+      {/* Ambient blobs */}
+      <div className="fixed top-[-10%] right-[-5%] w-96 h-96 bg-secondary-container opacity-30 rounded-full blur-[120px] -z-10" />
+      <div className="fixed bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary-container opacity-20 rounded-full blur-[150px] -z-10" />
 
+      {/* Header */}
+      <header className="w-full max-w-md mb-10 flex flex-col items-center text-center">
+        <div className="w-16 h-16 bg-primary-container rounded-3xl flex items-center justify-center mb-5 shadow-sm shadow-primary/10">
+          <span
+            className="material-symbols-outlined text-primary text-4xl"
+            style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
+          >
+            fitness_center
+          </span>
+        </div>
+        <h1 className="text-3xl font-extrabold tracking-tight text-on-surface mb-2">
+          Crear cuenta
+        </h1>
+        <p className="text-on-surface-variant text-base">
+          Empezá a trackear tu progreso hoy.
+        </p>
+      </header>
+
+      {/* Card */}
+      <main className="w-full max-w-md bg-surface-container-low p-8 rounded-2xl shadow-[0_32px_64px_-12px_rgba(57,56,47,0.08)]">
         {error && (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+          <div className="mb-6 rounded-xl bg-error-container/20 px-4 py-3 text-sm text-error">
             {error}
-          </p>
+          </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Email */}
+          <div className="space-y-1.5">
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-xs font-bold tracking-wider uppercase text-on-surface-variant/80 ml-1"
             >
               Email
             </label>
@@ -88,18 +103,24 @@ export default function RegisterPage() {
               id="email"
               type="email"
               autoComplete="email"
+              placeholder="nombre@ejemplo.com"
               {...register("email")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className={cn(
+                "w-full bg-surface-container-high border-none rounded-xl px-5 py-4 text-on-surface placeholder-outline outline-none transition-all duration-200",
+                "focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20",
+                errors.email && "ring-2 ring-error/30"
+              )}
             />
             {errors.email && (
-              <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
+              <p className="ml-1 text-xs text-error">{errors.email.message}</p>
             )}
           </div>
 
-          <div>
+          {/* Password */}
+          <div className="space-y-1.5">
             <label
               htmlFor="password"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-xs font-bold tracking-wider uppercase text-on-surface-variant/80 ml-1"
             >
               Contraseña
             </label>
@@ -107,20 +128,24 @@ export default function RegisterPage() {
               id="password"
               type="password"
               autoComplete="new-password"
+              placeholder="Mín. 8 caracteres"
               {...register("password")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className={cn(
+                "w-full bg-surface-container-high border-none rounded-xl px-5 py-4 text-on-surface placeholder-outline outline-none transition-all duration-200",
+                "focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20",
+                errors.password && "ring-2 ring-error/30"
+              )}
             />
             {errors.password && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.password.message}
-              </p>
+              <p className="ml-1 text-xs text-error">{errors.password.message}</p>
             )}
           </div>
 
-          <div>
+          {/* Confirm password */}
+          <div className="space-y-1.5">
             <label
               htmlFor="confirmPassword"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-xs font-bold tracking-wider uppercase text-on-surface-variant/80 ml-1"
             >
               Confirmar contraseña
             </label>
@@ -128,35 +153,42 @@ export default function RegisterPage() {
               id="confirmPassword"
               type="password"
               autoComplete="new-password"
+              placeholder="••••••••"
               {...register("confirmPassword")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className={cn(
+                "w-full bg-surface-container-high border-none rounded-xl px-5 py-4 text-on-surface placeholder-outline outline-none transition-all duration-200",
+                "focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20",
+                errors.confirmPassword && "ring-2 ring-error/30"
+              )}
             />
             {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.confirmPassword.message}
-              </p>
+              <p className="ml-1 text-xs text-error">{errors.confirmPassword.message}</p>
             )}
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="w-full signature-gradient text-white font-bold py-4 rounded-full shadow-lg shadow-primary/20 hover:opacity-90 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mt-2"
           >
             {isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
+      </main>
 
-        <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+      {/* Footer */}
+      <footer className="mt-8 text-center">
+        <p className="text-on-surface-variant text-sm">
           ¿Ya tenés cuenta?{" "}
           <Link
             href="/login"
-            className="font-medium text-zinc-900 hover:underline dark:text-zinc-100"
+            className="text-primary font-bold hover:underline decoration-2 underline-offset-4"
           >
             Iniciá sesión
           </Link>
         </p>
-      </div>
+      </footer>
     </div>
   );
 }

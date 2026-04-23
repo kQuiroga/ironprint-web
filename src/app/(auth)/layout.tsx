@@ -1,61 +1,46 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import { useAuth } from "@/hooks/useAuth";
-
-const navLinks = [
-  { href: "/calendar", label: "Calendario" },
-  { href: "/routines", label: "Rutinas" },
-  { href: "/exercises", label: "Ejercicios" },
-  { href: "/stats", label: "Estadísticas" },
-];
+import { BottomNav } from "@/components/ui/BottomNav";
+import { SideNav } from "@/components/ui/SideNav";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
-  const { logout } = useAuth();
-  const router = useRouter();
-
-  async function handleLogout() {
-    await logout();
-    router.push("/login");
-  }
-
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-          <Link
-            href="/calendar"
-            className="text-lg font-bold text-zinc-900 dark:text-zinc-100"
-          >
+    <div className="flex min-h-screen bg-background">
+      {/* Sidebar — desktop only */}
+      <SideNav />
+
+      {/* Header — mobile only */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl shadow-sm shadow-primary/5">
+        <div className="flex items-center justify-between px-6 py-4 max-w-2xl mx-auto w-full">
+          <span className="text-xl font-black text-primary font-headline tracking-tight">
             IronPrint
-          </Link>
-
-          <div className="flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            <button
-              onClick={handleLogout}
-              className="text-sm text-zinc-500 transition-colors hover:text-red-600 dark:text-zinc-400 dark:hover:text-red-400"
+          </span>
+          <button
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors text-on-surface-variant"
+            aria-label="Configuración"
+          >
+            <span
+              className="material-symbols-outlined text-[22px]"
+              style={{ fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
             >
-              Salir
-            </button>
-          </div>
-        </nav>
+              settings
+            </span>
+          </button>
+        </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-        {children}
+      {/* Main content */}
+      <main className="flex-1 md:ml-60 pt-20 md:pt-10 pb-28 md:pb-10 px-6 md:px-10">
+        <div className="max-w-3xl mx-auto">
+          {children}
+        </div>
       </main>
+
+      {/* Bottom nav — mobile only */}
+      <div className="md:hidden">
+        <BottomNav />
+      </div>
     </div>
   );
 }
