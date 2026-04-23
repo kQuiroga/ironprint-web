@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { SideNav } from "@/components/ui/SideNav";
 
@@ -8,7 +8,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar — desktop only */}
-      <SideNav />
+      <Suspense>
+        <SideNav />
+      </Suspense>
 
       {/* Header — mobile only */}
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl shadow-sm shadow-primary/5">
@@ -39,7 +41,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
       {/* Bottom nav — mobile only */}
       <div className="md:hidden">
-        <BottomNav />
+        <Suspense>
+          <BottomNav />
+        </Suspense>
       </div>
     </div>
   );
