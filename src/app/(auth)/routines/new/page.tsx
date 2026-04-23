@@ -7,7 +7,7 @@ import { useForm, useFieldArray, useController, useWatch, Control, UseFormRegist
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateRoutine } from '@/hooks/useRoutines';
-import { useExercises } from '@/hooks/useExercises';
+import { useExercises, useCreateExercise } from '@/hooks/useExercises';
 import { DayOfWeek, MuscleGroup } from '@/types/api.types';
 import type { ExerciseDto } from '@/types/api.types';
 import { cn } from '@/lib/cn';
@@ -157,6 +157,10 @@ interface DayPanelProps {
 
 function DayPanel({ control, register, errors, index, onRemove, usedDays, catalogExercises }: DayPanelProps) {
   const [showAll, setShowAll] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newExName, setNewExName] = useState('');
+  const [newExGroup, setNewExGroup] = useState<MuscleGroup | ''>('');
+  const createExercise = useCreateExercise();
 
   const { fields, append, remove } = useFieldArray({ control, name: `days.${index}.exercises` });
 
@@ -171,6 +175,22 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
     showAll || selectedMuscleGroups.length === 0
       ? catalogExercises
       : catalogExercises.filter((ex) => selectedMuscleGroups.includes(ex.muscleGroup));
+
+  const noExercisesForGroups = selectedMuscleGroups.length > 0 && availableExercises.length === 0 && !showAll;
+
+  function handleInlineCreate() {
+    if (!newExName.trim()) return;
+    const group = (newExGroup || selectedMuscleGroups[0] || MuscleGroup.Other) as MuscleGroup;
+    createExercise.mutate(
+      { name: newExName.trim(), muscleGroup: group },
+      {
+        onSuccess: () => {
+          setNewExName('');
+          setShowCreateForm(false);
+        },
+      },
+    );
+  }
 
   function toggleMuscleGroup(group: MuscleGroup) {
     const current = muscleGroupsField.value ?? [];
@@ -254,8 +274,51 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
           </div>
         )}
 
-        {fields.length === 0 && (
+        {fields.length === 0 && !noExercisesForGroups && !showCreateForm && (
           <p className="text-xs text-zinc-400">Sin ejercicios todavía.</p>
+        )}
+
+        {(noExercisesForGroups || showCreateForm) && (
+          <div className="rounded-lg bg-zinc-50 dark:bg-zinc-800/50 p-3 space-y-2">
+            <p className="text-xs text-zinc-400">
+              {noExercisesForGroups ? 'No hay ejercicios para estos grupos. Creá uno:' : 'Nuevo ejercicio:'}
+            </p>
+            <div className="flex gap-2">
+              <input
+                value={newExName}
+                onChange={(e) => setNewExName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleInlineCreate())}
+                placeholder="Nombre del ejercicio"
+                className="flex-1 rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm dark:bg-zinc-800 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <select
+                value={newExGroup || selectedMuscleGroups[0] || ''}
+                onChange={(e) => setNewExGroup(e.target.value as MuscleGroup)}
+                className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-2 py-1.5 text-sm dark:bg-zinc-800 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {(selectedMuscleGroups.length > 0 ? selectedMuscleGroups : ALL_MUSCLE_GROUPS).map((g) => (
+                  <option key={g} value={g}>{MUSCLE_GROUP_LABELS[g]}</option>
+                ))}
+              </select>
+              <button
+                type="button"
+                disabled={!newExName.trim() || createExercise.isPending}
+                onClick={handleInlineCreate}
+                className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 hover:bg-blue-700"
+              >
+                {createExercise.isPending ? '...' : 'Crear'}
+              </button>
+              {!noExercisesForGroups && (
+                <button
+                  type="button"
+                  onClick={() => { setShowCreateForm(false); setNewExName(''); }}
+                  className="rounded-lg px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-600"
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
+          </div>
         )}
         {fields.map((field, exIndex) => (
           <ExerciseRow
@@ -265,20 +328,31 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
             dayIndex={index}
             exIndex={exIndex}
             onRemove={() => remove(exIndex)}
-            availableExercises={availableExercises}
+            availableExercises={availableExercises.length > 0 ? availableExercises : catalogExercises}
             showLabels={exIndex === 0}
           />
         ))}
         {dayErrors?.exercises?.root?.message && (
           <p className="text-xs text-red-500">{dayErrors.exercises.root.message}</p>
         )}
-        <button
-          type="button"
-          onClick={() => append({ exerciseId: '', targetSets: 3, targetReps: 10 })}
-          className="mt-1 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-        >
-          + Agregar ejercicio
-        </button>
+        <div className="flex items-center gap-4 mt-1">
+          <button
+            type="button"
+            onClick={() => append({ exerciseId: '', targetSets: 3, targetReps: 10 })}
+            className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            + Agregar ejercicio
+          </button>
+          {!showCreateForm && !noExercisesForGroups && (
+            <button
+              type="button"
+              onClick={() => setShowCreateForm(true)}
+              className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              + Crear ejercicio nuevo
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

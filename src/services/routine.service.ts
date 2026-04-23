@@ -31,7 +31,7 @@ async function activate(id: string): Promise<void> {
 }
 
 async function deactivate(id: string): Promise<void> {
-  await api.post(`/routines/${id}/deactivate`);
+  await api.put(`/routines/${id}/deactivate`);
 }
 
 async function getActive(): Promise<RoutineDto | null> {

@@ -49,7 +49,7 @@ export default function CalendarPage() {
       .map((d) => [d.date, d.dayLogStatus as DayLogStatus]),
   );
   const plannedDates = new Set(
-    (calendarDays ?? []).filter((d) => d.isPlanned).map((d) => d.date),
+    (calendarDays ?? []).filter((d) => d.routineDayId !== null).map((d) => d.date),
   );
   const routineDayIds = new Map(
     (calendarDays ?? [])

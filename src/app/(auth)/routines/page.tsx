@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useRoutines, useDeleteRoutine, useActivateRoutine, useDeactivateRoutine } from '@/hooks/useRoutines';
+import { useRoutines, useDeleteRoutine, useActivateRoutine } from '@/hooks/useRoutines';
 import { cn } from '@/lib/cn';
 
 export default function RoutinesPage() {
@@ -10,7 +10,7 @@ export default function RoutinesPage() {
   const { data: routines, isLoading } = useRoutines();
   const deleteRoutine = useDeleteRoutine();
   const activateRoutine = useActivateRoutine();
-  const deactivateRoutine = useDeactivateRoutine();
+
 
   function handleDelete(id: string, name: string) {
     if (!confirm(`¿Eliminar la rutina "${name}"?`)) return;
@@ -80,11 +80,10 @@ export default function RoutinesPage() {
               <div className="ml-4 flex gap-1">
                 {routine.isActive ? (
                   <button
-                    onClick={() => deactivateRoutine.mutate(routine.id)}
-                    disabled={deactivateRoutine.isPending}
-                    className="rounded-lg px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 disabled:opacity-50 dark:hover:bg-zinc-800"
+                    disabled
+                    className="rounded-lg px-3 py-1.5 text-sm text-zinc-300 cursor-not-allowed dark:text-zinc-600"
                   >
-                    Desactivar
+                    Activa
                   </button>
                 ) : (
                   <button

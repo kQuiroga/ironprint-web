@@ -134,7 +134,6 @@ export interface CalendarDayDto {
   hasSession: boolean;
   sessionId: string | null;
   dayLogStatus: DayLogStatus | null;
-  isPlanned: boolean;
   routineDayId: string | null;
 }
 
