@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { format } from "date-fns";
 import { cn } from "@/lib/cn";
 
 interface NavItem {
@@ -14,14 +13,13 @@ interface NavItem {
 
 export function SideNav() {
   const pathname = usePathname();
-  const todayDate = format(new Date(), "yyyy-MM-dd");
 
   const navItems: NavItem[] = [
     {
-      href: `/workout/${todayDate}`,
+      href: "/today",
       label: "Hoy",
       icon: "event_upcoming",
-      match: (p) => p.startsWith("/workout"),
+      match: (p) => p === "/today" || p.startsWith("/workout"),
     },
     {
       href: "/calendar",
