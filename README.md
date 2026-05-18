@@ -8,7 +8,7 @@ Frontend for IronPrint — a personal workout tracking app. Built with Next.js 1
 
 - **Framework:** Next.js 16 (App Router), React 19
 - **Language:** TypeScript (strict)
-- **Styling:** Tailwind CSS 4 — Material You design system
+- **Styling:** Tailwind CSS 4 — Ironprint Design
 - **Data fetching:** TanStack Query v5
 - **Forms:** React Hook Form 7 + Zod 4
 - **HTTP client:** Axios

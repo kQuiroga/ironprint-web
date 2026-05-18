@@ -118,6 +118,7 @@ src/
 - Responsive-first: design mobile-first, then add `sm:`, `md:`, `lg:` breakpoints
 - Use `cn()` utility (clsx + tailwind-merge) for conditional class composition
 - No inline `style` attributes unless dynamically computed values require it
+- Ver [`design.md`](./design.md) para el contrato completo de tokens, tipografía, formas y patrones de componentes.
 
 ## Security
 - Never expose secrets in client code — only variables prefixed with `NEXT_PUBLIC_` are available client-side
