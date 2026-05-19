@@ -4,39 +4,7 @@ import { use } from 'react';
 import Link from 'next/link';
 import { useRoutine } from '@/hooks/useRoutines';
 import { useExercises } from '@/hooks/useExercises';
-import { DayOfWeek, MuscleGroup } from '@/types/api.types';
-
-const DAY_LABELS: Record<DayOfWeek, string> = {
-  [DayOfWeek.Monday]: 'Lunes',
-  [DayOfWeek.Tuesday]: 'Martes',
-  [DayOfWeek.Wednesday]: 'Miércoles',
-  [DayOfWeek.Thursday]: 'Jueves',
-  [DayOfWeek.Friday]: 'Viernes',
-  [DayOfWeek.Saturday]: 'Sábado',
-  [DayOfWeek.Sunday]: 'Domingo',
-};
-
-const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
-  [MuscleGroup.Chest]: 'Pecho',
-  [MuscleGroup.Back]: 'Espalda',
-  [MuscleGroup.Shoulders]: 'Hombros',
-  [MuscleGroup.Biceps]: 'Bíceps',
-  [MuscleGroup.Triceps]: 'Tríceps',
-  [MuscleGroup.Forearms]: 'Antebrazos',
-  [MuscleGroup.Abs]: 'Abdominales',
-  [MuscleGroup.Quads]: 'Cuádriceps',
-  [MuscleGroup.Hamstrings]: 'Isquiotibiales',
-  [MuscleGroup.Glutes]: 'Glúteos',
-  [MuscleGroup.Calves]: 'Gemelos',
-  [MuscleGroup.FullBody]: 'Cuerpo completo',
-  [MuscleGroup.Cardio]: 'Cardio',
-  [MuscleGroup.Other]: 'Otro',
-};
-
-const DAY_ORDER: DayOfWeek[] = [
-  DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday,
-  DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday,
-];
+import { DAY_LABELS, DAY_ORDER, MUSCLE_GROUP_LABELS } from '@/components/routines/constants';
 
 interface Props {
   params: Promise<{ id: string }>;
