@@ -52,9 +52,9 @@ export default function RoutineDetailPage({ params }: Props) {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 w-48 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />
+        <div className="h-8 w-48 animate-pulse rounded-xl bg-surface-container-high" />
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-32 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+          <div key={i} className="h-32 animate-pulse rounded-xl bg-surface-container-high" />
         ))}
       </div>
     );
@@ -63,8 +63,8 @@ export default function RoutineDetailPage({ params }: Props) {
   if (isError || !routine) {
     return (
       <div className="py-16 text-center">
-        <p className="text-zinc-500 dark:text-zinc-400">Rutina no encontrada.</p>
-        <Link href="/routines" className="mt-4 inline-block text-sm text-blue-600 hover:underline dark:text-blue-400">
+        <p className="text-on-surface-variant">Rutina no encontrada.</p>
+        <Link href="/routines" className="mt-4 inline-block text-sm text-primary hover:underline">
           ← Volver a rutinas
         </Link>
       </div>
@@ -78,21 +78,21 @@ export default function RoutineDetailPage({ params }: Props) {
   return (
     <div>
       <div className="mb-6">
-        <Link href="/routines" className="mb-3 inline-block text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">
+        <Link href="/routines" className="mb-3 inline-block text-sm text-on-surface-variant hover:text-on-surface">
           ← Rutinas
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            <h1 className="text-2xl font-bold text-on-surface">
               {routine.name}
             </h1>
-            <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-0.5 text-sm text-on-surface-variant">
               {routine.weeksDuration} semanas
             </p>
           </div>
           <Link
             href={`/routines/${id}/edit`}
-            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            className="rounded-2xl border border-outline-variant/20 px-3 py-1.5 text-sm text-on-surface-variant transition-colors hover:bg-surface-container"
           >
             Editar
           </Link>
@@ -100,18 +100,18 @@ export default function RoutineDetailPage({ params }: Props) {
       </div>
 
       {sortedDays.length === 0 ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-on-surface-variant">
           Esta rutina no tiene días configurados todavía.
         </p>
       ) : (
         <div className="space-y-4">
           {sortedDays.map((day) => (
-            <div key={day.id} className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
-                <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
+            <div key={day.id} className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest">
+              <div className="border-b border-outline-variant/10 px-5 py-3">
+                <h2 className="font-semibold text-on-surface">
                   {DAY_LABELS[day.dayOfWeek] ?? `Día ${day.dayOfWeek}`}
                   {day.name && (
-                    <span className="ml-2 font-normal text-zinc-500 dark:text-zinc-400">— {day.name}</span>
+                    <span className="ml-2 font-normal text-on-surface-variant">— {day.name}</span>
                   )}
                 </h2>
                 {day.muscleGroups.length > 0 && (
@@ -119,7 +119,7 @@ export default function RoutineDetailPage({ params }: Props) {
                     {day.muscleGroups.map((mg) => (
                       <span
                         key={mg}
-                        className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                        className="rounded-full bg-surface-container text-xs text-on-surface-variant px-2 py-0.5"
                       >
                         {MUSCLE_GROUP_LABELS[mg]}
                       </span>
@@ -129,17 +129,17 @@ export default function RoutineDetailPage({ params }: Props) {
               </div>
 
               {day.exercises.length === 0 ? (
-                <p className="px-5 py-3 text-sm text-zinc-500">Sin ejercicios.</p>
+                <p className="px-5 py-3 text-sm text-on-surface-variant">Sin ejercicios.</p>
               ) : (
-                <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                <div className="divide-y divide-outline-variant/10">
                   {[...day.exercises]
                     .sort((a, b) => a.order - b.order)
                     .map((exercise) => (
                       <div key={exercise.id} className="flex items-center justify-between px-5 py-3">
-                        <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                        <span className="font-medium text-on-surface">
                           {exerciseMap.get(exercise.exerciseId) ?? exercise.exerciseId}
                         </span>
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                        <span className="text-sm text-on-surface-variant">
                           {exercise.targetSets} × {exercise.targetReps}
                         </span>
                       </div>

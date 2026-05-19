@@ -35,7 +35,7 @@ export default function StatsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+      <h1 className="mb-6 text-2xl font-bold text-on-surface">
         Estadísticas
       </h1>
 
@@ -43,38 +43,38 @@ export default function StatsPage() {
         {months.map(({ date, count }) => (
           <div
             key={date.toISOString()}
-            className="rounded-xl border border-zinc-200 bg-white p-5 text-center dark:border-zinc-800 dark:bg-zinc-900"
+            className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-5 text-center"
           >
-            <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+            <p className="text-3xl font-bold text-on-surface">
               {count}
             </p>
-            <p className="mt-1 text-sm capitalize text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-sm capitalize text-on-surface-variant">
               {format(date, 'MMMM', { locale: es })}
             </p>
           </div>
         ))}
       </div>
 
-      <p className="mt-3 text-center text-xs text-zinc-400">sesiones registradas</p>
+      <p className="mt-3 text-center text-xs text-on-surface-variant">sesiones registradas</p>
 
       {/* Barras comparativas */}
       <div className="mt-8">
-        <h2 className="mb-4 font-semibold text-zinc-900 dark:text-zinc-100">
+        <h2 className="mb-4 font-semibold text-on-surface">
           Comparativa mensual
         </h2>
         <div className="space-y-3">
           {months.map(({ date, count }) => (
             <div key={date.toISOString()} className="flex items-center gap-3">
-              <span className="w-20 text-right text-sm capitalize text-zinc-500">
+              <span className="w-20 text-right text-sm capitalize text-on-surface-variant">
                 {format(date, 'MMM', { locale: es })}
               </span>
-              <div className="flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+              <div className="flex-1 overflow-hidden rounded-full bg-surface-container-high">
                 <div
-                  className="h-6 rounded-full bg-blue-500 transition-all duration-500"
+                  className="h-6 rounded-full bg-primary transition-all duration-500"
                   style={{ width: `${(count / maxCount) * 100}%` }}
                 />
               </div>
-              <span className="w-6 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <span className="w-6 text-sm font-medium text-on-surface-variant">
                 {count}
               </span>
             </div>

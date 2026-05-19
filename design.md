@@ -199,7 +199,7 @@ Nota técnica sobre Material Symbols: el font se carga mediante una etiqueta `<l
 | `rounded-3xl`  | Superficies grandes         | Cards de contenido, contenedor del calendario, modal de escritorio, top del bottom sheet (`rounded-t-3xl`), top de BottomNav | Para contenedores que ocupan área significativa |
 | `rounded-2xl`  | Elementos interactivos medianos | Ítems de navegación, botones secundarios dentro de modales (`h-14`), celdas de la vista semanal | Nivel intermedio                              |
 | `rounded-xl`   | Elementos pequeños          | Celdas del calendario mensual, contenedores de ícono (`w-10 h-10`), skeletons de contenido    | El nivel más pequeño permitido                |
-| `rounded-lg`   | **PROHIBIDO**               | Aparece sólo en páginas no conformes (`routines/`, `stats/`)                                   | Reemplazar según jerarquía de tamaño          |
+| `rounded-lg`   | **PROHIBIDO**               | No tiene uso válido en este sistema de diseño                                                  | Reemplazar según jerarquía de tamaño          |
 
 ---
 
@@ -576,9 +576,8 @@ Estos archivos son implementaciones canónicas. Ante cualquier duda sobre cómo 
 | `src/app/(auth)/today/page.tsx`                      | Cumple                   | —                                                             |
 | `src/app/(auth)/workout/[date]/page.tsx`             | Cumple con desvío menor  | Mayormente conforme; revisar en próximo pass                  |
 | `src/app/(auth)/layout.tsx`                          | Cumple con desvío menor  | Header mobile usa `bg-white/80` en vez de `bg-background/80` |
-| `src/app/(auth)/routines/page.tsx`                   | No cumple — deuda técnica | `zinc-*`, `blue-*`, `red-*`, `dark:`, `rounded-lg`           |
-| `src/app/(auth)/routines/[id]/page.tsx`              | No cumple — deuda técnica | `zinc-*`, `blue-*`, sin tokens semánticos                    |
-| `src/app/(auth)/routines/new/page.tsx`               | No cumple — deuda técnica | `zinc-*`, `blue-*`, `red-*`, `dark:`, `focus:ring-blue-500`  |
-| `src/app/(auth)/stats/page.tsx`                      | No cumple — deuda técnica | `zinc-*`, `blue-500` (barras Recharts), `dark:`              |
-
-La migración de los archivos marcados como "No cumple" está diferida a un `sdd-apply` posterior enfocado exclusivamente en esa deuda técnica.
+| `src/app/(auth)/routines/page.tsx`                   | Cumple                   | —                                                             |
+| `src/app/(auth)/routines/[id]/page.tsx`              | Cumple                   | —                                                             |
+| `src/app/(auth)/routines/[id]/edit/page.tsx`         | Cumple                   | —                                                             |
+| `src/app/(auth)/routines/new/page.tsx`               | Cumple                   | —                                                             |
+| `src/app/(auth)/stats/page.tsx`                      | Cumple                   | —                                                             |

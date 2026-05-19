@@ -89,13 +89,13 @@ function ExerciseRow({ register, errors, dayIndex, exIndex, onRemove, availableE
     <div className="flex items-end gap-2">
       <div className="flex-1">
         {showLabels && (
-          <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">Ejercicio</label>
+          <label className="mb-1 block text-xs text-on-surface-variant">Ejercicio</label>
         )}
         <select
           {...register(`days.${dayIndex}.exercises.${exIndex}.exerciseId`)}
           className={cn(
-            'w-full rounded-lg border px-3 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100',
-            exErrors?.exerciseId ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
+            'w-full rounded-xl border px-3 py-1.5 text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high',
+            exErrors?.exerciseId ? 'border-error' : 'border-outline-variant/20',
           )}
         >
           <option value="">Seleccioná...</option>
@@ -106,36 +106,36 @@ function ExerciseRow({ register, errors, dayIndex, exIndex, onRemove, availableE
       </div>
       <div className="w-20">
         {showLabels && (
-          <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">Series</label>
+          <label className="mb-1 block text-xs text-on-surface-variant">Series</label>
         )}
         <input
           type="number"
           {...register(`days.${dayIndex}.exercises.${exIndex}.targetSets`, { valueAsNumber: true })}
           placeholder="3"
           className={cn(
-            'w-full rounded-lg border px-2 py-1.5 text-center text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100',
-            exErrors?.targetSets ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
+            'w-full rounded-xl border px-2 py-1.5 text-center text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high',
+            exErrors?.targetSets ? 'border-error' : 'border-outline-variant/20',
           )}
         />
       </div>
       <div className="w-20">
         {showLabels && (
-          <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">Reps</label>
+          <label className="mb-1 block text-xs text-on-surface-variant">Reps</label>
         )}
         <input
           type="number"
           {...register(`days.${dayIndex}.exercises.${exIndex}.targetReps`, { valueAsNumber: true })}
           placeholder="10"
           className={cn(
-            'w-full rounded-lg border px-2 py-1.5 text-center text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100',
-            exErrors?.targetReps ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
+            'w-full rounded-xl border px-2 py-1.5 text-center text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high',
+            exErrors?.targetReps ? 'border-error' : 'border-outline-variant/20',
           )}
         />
       </div>
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-lg px-2 py-1.5 text-sm text-zinc-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+        className="rounded-2xl px-2 py-1.5 text-sm text-on-surface-variant hover:bg-error-container/20 hover:text-error"
       >
         x
       </button>
@@ -204,12 +204,12 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
   const dayErrors = errors.days?.[index];
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest">
       {/* Header: día de semana + eliminar */}
-      <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
+      <div className="flex items-center justify-between border-b border-outline-variant/10 px-5 py-3">
         <select
           {...register(`days.${index}.dayOfWeek`)}
-          className="rounded-lg border border-zinc-200 px-3 py-1.5 text-sm font-semibold text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="rounded-xl border border-outline-variant/20 px-3 py-1.5 text-sm font-semibold text-on-surface outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high"
         >
           {DAY_ORDER.map((day) => (
             <option key={day} value={day} disabled={usedDays.includes(day)}>
@@ -217,23 +217,23 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
             </option>
           ))}
         </select>
-        <button type="button" onClick={onRemove} className="text-sm text-zinc-400 hover:text-red-500">
+        <button type="button" onClick={onRemove} className="text-sm text-on-surface-variant hover:text-error">
           Eliminar día
         </button>
       </div>
 
       {/* Nombre del día */}
-      <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
+      <div className="border-b border-outline-variant/10 px-5 py-3">
         <input
           {...register(`days.${index}.name`)}
           placeholder="Nombre del día (ej: Push, Pierna, Full Body)"
-          className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="w-full rounded-xl border border-outline-variant/20 px-3 py-1.5 text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high"
         />
       </div>
 
       {/* Grupos musculares */}
-      <div className="border-b border-zinc-100 px-5 py-3 dark:border-zinc-800">
-        <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+      <div className="border-b border-outline-variant/10 px-5 py-3">
+        <p className="mb-2 text-xs font-medium text-on-surface-variant">
           Grupos musculares (filtra los ejercicios disponibles)
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -245,8 +245,8 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
               className={cn(
                 'rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
                 selectedMuscleGroups.includes(group)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700',
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high',
               )}
             >
               {MUSCLE_GROUP_LABELS[group]}
@@ -259,7 +259,7 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
       <div className="space-y-2 px-5 py-3">
         {selectedMuscleGroups.length > 0 && (
           <div className="flex items-center justify-between">
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-on-surface-variant">
               {showAll
                 ? 'Mostrando todos los ejercicios'
                 : `${availableExercises.length} ejercicio${availableExercises.length !== 1 ? 's' : ''} para los grupos seleccionados`}
@@ -267,7 +267,7 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
             <button
               type="button"
               onClick={() => setShowAll((v) => !v)}
-              className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-400"
+              className="text-xs text-primary hover:text-primary-dim"
             >
               {showAll ? 'Volver al filtro' : 'Ver todos'}
             </button>
@@ -275,12 +275,12 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
         )}
 
         {fields.length === 0 && !noExercisesForGroups && !showCreateForm && (
-          <p className="text-xs text-zinc-400">Sin ejercicios todavía.</p>
+          <p className="text-xs text-on-surface-variant">Sin ejercicios todavía.</p>
         )}
 
         {(noExercisesForGroups || showCreateForm) && (
-          <div className="rounded-lg bg-zinc-50 dark:bg-zinc-800/50 p-3 space-y-2">
-            <p className="text-xs text-zinc-400">
+          <div className="rounded-xl bg-surface-container p-3 space-y-2">
+            <p className="text-xs text-on-surface-variant">
               {noExercisesForGroups ? 'No hay ejercicios para estos grupos. Creá uno:' : 'Nuevo ejercicio:'}
             </p>
             <div className="flex gap-2">
@@ -289,12 +289,12 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
                 onChange={(e) => setNewExName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleInlineCreate())}
                 placeholder="Nombre del ejercicio"
-                className="flex-1 rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm dark:bg-zinc-800 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 rounded-xl border border-outline-variant/20 px-3 py-1.5 text-sm bg-surface-container-high outline-none focus:ring-2 focus:ring-primary/20"
               />
               <select
                 value={newExGroup || selectedMuscleGroups[0] || ''}
                 onChange={(e) => setNewExGroup(e.target.value as MuscleGroup)}
-                className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-2 py-1.5 text-sm dark:bg-zinc-800 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-blue-500"
+                className="rounded-xl border border-outline-variant/20 px-2 py-1.5 text-sm bg-surface-container-high outline-none focus:ring-2 focus:ring-primary/20"
               >
                 {(selectedMuscleGroups.length > 0 ? selectedMuscleGroups : ALL_MUSCLE_GROUPS).map((g) => (
                   <option key={g} value={g}>{MUSCLE_GROUP_LABELS[g]}</option>
@@ -304,7 +304,7 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
                 type="button"
                 disabled={!newExName.trim() || createExercise.isPending}
                 onClick={handleInlineCreate}
-                className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 hover:bg-blue-700"
+                className="rounded-2xl bg-primary-container px-3 py-1.5 text-sm font-medium text-on-primary-container hover:bg-primary-container/80 disabled:opacity-50"
               >
                 {createExercise.isPending ? '...' : 'Crear'}
               </button>
@@ -312,7 +312,7 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
                 <button
                   type="button"
                   onClick={() => { setShowCreateForm(false); setNewExName(''); }}
-                  className="rounded-lg px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-600"
+                  className="rounded-2xl px-3 py-1.5 text-sm text-on-surface-variant hover:text-on-surface"
                 >
                   Cancelar
                 </button>
@@ -333,13 +333,13 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
           />
         ))}
         {dayErrors?.exercises?.root?.message && (
-          <p className="text-xs text-red-500">{dayErrors.exercises.root.message}</p>
+          <p className="text-xs text-error">{dayErrors.exercises.root.message}</p>
         )}
         <div className="flex items-center gap-4 mt-1">
           <button
             type="button"
             onClick={() => append({ exerciseId: '', targetSets: 3, targetReps: 10 })}
-            className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            className="text-xs font-medium text-primary hover:text-primary-dim"
           >
             + Agregar ejercicio
           </button>
@@ -347,7 +347,7 @@ function DayPanel({ control, register, errors, index, onRemove, usedDays, catalo
             <button
               type="button"
               onClick={() => setShowCreateForm(true)}
-              className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              className="text-xs font-medium text-primary hover:text-primary-dim"
             >
               + Crear ejercicio nuevo
             </button>
@@ -408,39 +408,39 @@ export default function NewRoutinePage() {
       <div className="mb-6">
         <Link
           href="/routines"
-          className="mb-3 inline-block text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+          className="mb-3 inline-block text-sm text-on-surface-variant hover:text-on-surface"
         >
           Rutinas
         </Link>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Nueva rutina</h1>
+        <h1 className="text-2xl font-bold text-on-surface">Nueva rutina</h1>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Nombre <span className="text-red-500">*</span>
+            <label className="mb-1 block text-sm font-medium text-on-surface-variant">
+              Nombre <span className="text-error">*</span>
             </label>
             <input
               {...register('name')}
               placeholder="Ej: Push / Pull / Legs"
               className={cn(
-                'w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-900 dark:text-zinc-100',
-                errors.name ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
+                'w-full rounded-xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high',
+                errors.name ? 'border-error' : 'border-outline-variant/20',
               )}
             />
-            {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+            {errors.name && <p className="mt-1 text-xs text-error">{errors.name.message}</p>}
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className="mb-1 block text-sm font-medium text-on-surface-variant">
               Duración (semanas)
             </label>
             <input
               type="number"
               {...register('weeksDuration', { valueAsNumber: true })}
               className={cn(
-                'w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-900 dark:text-zinc-100',
-                errors.weeksDuration ? 'border-red-400' : 'border-zinc-200 dark:border-zinc-700',
+                'w-full rounded-xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20 bg-surface-container-high',
+                errors.weeksDuration ? 'border-error' : 'border-outline-variant/20',
               )}
             />
           </div>
@@ -448,19 +448,19 @@ export default function NewRoutinePage() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">Días</h2>
+            <h2 className="font-semibold text-on-surface">Días</h2>
             <button
               type="button"
               onClick={() => appendDay({ dayOfWeek: getNextAvailableDay(), name: '', muscleGroups: [], exercises: [] })}
               disabled={dayFields.length >= 7}
-              className="rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-2xl border border-outline-variant/20 px-3 py-1.5 text-sm text-on-surface-variant transition-colors hover:bg-surface-container disabled:opacity-40"
             >
               + Agregar día
             </button>
           </div>
 
           {dayFields.length === 0 && (
-            <p className="text-sm text-zinc-400 dark:text-zinc-500">
+            <p className="text-sm text-on-surface-variant">
               Podés crear la rutina sin días y configurarlos después.
             </p>
           )}
@@ -482,7 +482,7 @@ export default function NewRoutinePage() {
         <button
           type="submit"
           disabled={createRoutine.isPending}
-          className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+          className="w-full rounded-full signature-gradient py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-50"
         >
           {createRoutine.isPending ? 'Creando...' : 'Crear rutina'}
         </button>

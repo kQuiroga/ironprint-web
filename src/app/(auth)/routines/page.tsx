@@ -20,12 +20,12 @@ export default function RoutinesPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h1 className="text-2xl font-bold text-on-surface">
           Rutinas
         </h1>
         <Link
           href="/routines/new"
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="rounded-full signature-gradient px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 shadow-lg shadow-primary/20 active:scale-[0.98]"
         >
           + Nueva rutina
         </Link>
@@ -36,14 +36,14 @@ export default function RoutinesPage() {
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
-              className="h-20 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800"
+              className="h-20 animate-pulse rounded-xl bg-surface-container-high"
             />
           ))}
         </div>
       )}
 
       {!isLoading && routines?.length === 0 && (
-        <div className="py-16 text-center text-zinc-500 dark:text-zinc-400">
+        <div className="py-16 text-center text-on-surface-variant">
           <p className="text-lg font-medium">No tenés rutinas todavía.</p>
           <p className="mt-1 text-sm">Creá tu primera rutina para empezar.</p>
         </div>
@@ -55,24 +55,24 @@ export default function RoutinesPage() {
             <div
               key={routine.id}
               className={cn(
-                'flex items-center justify-between rounded-xl border bg-white px-5 py-4 dark:bg-zinc-900',
+                'flex items-center justify-between rounded-xl border bg-surface-container-lowest px-5 py-4',
                 routine.isActive
-                  ? 'border-blue-500 dark:border-blue-500'
-                  : 'border-zinc-200 dark:border-zinc-800',
+                  ? 'border-primary'
+                  : 'border-outline-variant/20',
               )}
             >
               <Link href={`/routines/${routine.id}`} className="flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="font-semibold text-zinc-900 hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400">
+                  <p className="font-semibold text-on-surface hover:text-primary">
                     {routine.name}
                   </p>
                   {routine.isActive && (
-                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+                    <span className="rounded-full bg-primary-container px-2 py-0.5 text-xs font-medium text-on-primary-container">
                       Activa
                     </span>
                   )}
                 </div>
-                <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-600">
+                <p className="mt-0.5 text-xs text-on-surface-variant">
                   {routine.weeksDuration} semanas · {routine.days.length} días
                 </p>
               </Link>
@@ -81,7 +81,7 @@ export default function RoutinesPage() {
                 {routine.isActive ? (
                   <button
                     disabled
-                    className="rounded-lg px-3 py-1.5 text-sm text-zinc-300 cursor-not-allowed dark:text-zinc-600"
+                    className="rounded-2xl px-3 py-1.5 text-sm text-on-surface-variant/40 cursor-not-allowed"
                   >
                     Activa
                   </button>
@@ -89,7 +89,7 @@ export default function RoutinesPage() {
                   <button
                     onClick={() => activateRoutine.mutate(routine.id, { onSuccess: () => router.push('/calendar') })}
                     disabled={activateRoutine.isPending}
-                    className="rounded-lg px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:opacity-50 dark:hover:bg-blue-950/30 dark:hover:text-blue-400"
+                    className="rounded-2xl px-3 py-1.5 text-sm text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-50"
                   >
                     Activar
                   </button>
@@ -97,7 +97,7 @@ export default function RoutinesPage() {
                 <button
                   onClick={() => handleDelete(routine.id, routine.name)}
                   disabled={deleteRoutine.isPending}
-                  className="rounded-lg px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+                  className="rounded-2xl px-3 py-1.5 text-sm text-on-surface-variant transition-colors hover:bg-error-container/20 hover:text-error"
                 >
                   Eliminar
                 </button>
