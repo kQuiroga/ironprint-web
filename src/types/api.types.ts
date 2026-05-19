@@ -118,6 +118,7 @@ export interface CreateRoutineRequest {
 export interface UpdateRoutineRequest {
   name: string;
   weeksDuration: number;
+  days?: CreateRoutineDayRequest[]; // omitted = days unchanged; present = full replacement
 }
 
 export enum DayLogStatus {
